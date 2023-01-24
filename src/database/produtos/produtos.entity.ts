@@ -1,10 +1,10 @@
-import { relacionamento_usuario_produto } from 'src/database/usuarioProduto/relacionamento_usuarios_produtos.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { usuario_ref_produto } from '../usuarioProduto/relacionamento_usuarios_produtos.entity';
 
 @Entity()
-export class produtos {
+export class Produtos {
   @PrimaryGeneratedColumn()
-  idprodutos: number;
+  id: number;
 
   @Column()
   nome: string;
@@ -27,6 +27,6 @@ export class produtos {
   @Column()
   data_cadastro: Date;
 
-  // @OneToMany(type => relacionamento_usuario_produto, usuarioProdutoRelation => usuarioProdutoRelation.id_produto)
-  //   produtoRelacao: relacionamento_usuario_produto[];
+  @OneToMany(() => usuario_ref_produto, usuario_ref_produto => usuario_ref_produto.produto_)
+  id_: usuario_ref_produto;
 }

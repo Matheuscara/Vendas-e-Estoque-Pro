@@ -1,23 +1,21 @@
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { produtos } from '../produtos/produtos.entity';
-import { usuario } from '../usuario/usuario.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Produtos } from '../produtos/produtos.entity';
+import { Usuario } from '../usuario/usuario.entity';
 
 @Entity()
-export class relacionamento_usuario_produto {
+export class usuario_ref_produto {
   @PrimaryGeneratedColumn()
-  idrelacionamento_usuarios_produtos: number;
-
-  @ManyToMany(type => usuario, (usuarios) => usuarios.teste )
-  @JoinTable()
-  usuarios: usuario[];
-
-  // @ManyToMany(type => produtos, produtos => produtos.produtoRelacao)
-  // @JoinColumn()
-  // id_produto: produtos;
+  id: number;
 
   @Column()
   data_operacao: Date;
 
   @Column()
   tipo_operacao: string;
+
+  @ManyToOne(() => Usuario, (usuarios) => usuarios.id_)
+  usuario_ = Number;
+
+  @ManyToOne(() => Produtos, (produtos) => produtos.id_)
+  produto_ = Number;
 }

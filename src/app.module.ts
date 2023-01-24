@@ -1,20 +1,18 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { usuarioModule } from './database/usuario/usuario.module';
-import { produtoModule } from './database/produtos/produto.module';
 import { UsuarioProdutoModule } from './database/usuarioProduto/usuarioProduto.module';
+import { UsuariosModule } from './controllers/usuario/usuario.module';
+import { produtosModule } from './controllers/produto/produto.module';
 
 @Module({
   imports: [
     SwaggerModule,
     DocumentBuilder,
-    usuarioModule,
-    produtoModule,
-    UsuarioProdutoModule
+    UsuarioProdutoModule,
+    UsuariosModule,
+    produtosModule
   ],
-  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}

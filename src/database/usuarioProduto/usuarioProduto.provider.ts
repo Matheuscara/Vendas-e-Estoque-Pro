@@ -1,10 +1,10 @@
 import { DataSource } from 'typeorm';
-import { relacionamento_usuario_produto } from './relacionamento_usuarios_produtos.entity';
+import { usuario_ref_produto } from './relacionamento_usuarios_produtos.entity';
 
-export const usuarioProviders = [
+export const usuarioProdutoProviders = [
   {
     provide: 'USUARIO_PRODUTO_REPOSITORY',
-    useFactory: (dataSource: DataSource) => dataSource.getRepository(relacionamento_usuario_produto),
+    useFactory: (dataSource: DataSource) => dataSource.getRepository(usuario_ref_produto),
     inject: ['DATA_SOURCE'],
   },
 ];
