@@ -1,5 +1,7 @@
+import { Usuario } from 'src/database/usuario/usuario.entity';
+
 export class ProdutoDto {
-  id: number;  
+  id: number;
 
   nome: string;
 
@@ -14,4 +16,6 @@ export class ProdutoDto {
   valorVenda: number;
 
   data_cadastro: Date;
+
+  user: any
 }

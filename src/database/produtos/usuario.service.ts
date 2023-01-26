@@ -1,4 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
+import { Console } from 'console';
 import { ProdutoDto } from 'src/modules/Dto/produto.dto';
 import { Repository } from 'typeorm';
 import { Produtos } from './produtos.entity';
@@ -15,12 +16,6 @@ export class ProdutosService {
   }
 
   async adicionarProduto(produtoDto: ProdutoDto) {
-    const novoProduto = this.produtosRepository.create(produtoDto);
-
-    try {
-      this.produtosRepository.save(novoProduto);
-    } catch (err) {
-      console.log(err);
-    }
+    this.produtosRepository.save(produtoDto);
   }
 }

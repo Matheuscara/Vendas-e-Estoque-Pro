@@ -35,4 +35,8 @@ export class usuarioController {
   criaUsuario(@Body() usuarioDto: UsuarioDto): any {
     return this.usuarioService.adicionarUsuario(usuarioDto)
   }
+
+
+  // @Get('/consulta/usuario/:id')
+  // consultaUsuarioId(usuarioDto: consulta.usuario.request.Dto):
 }

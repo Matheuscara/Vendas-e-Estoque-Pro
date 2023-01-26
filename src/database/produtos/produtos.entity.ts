@@ -1,5 +1,5 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { usuario_ref_produto } from '../usuarioProduto/relacionamento_usuarios_produtos.entity';
+import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Usuario } from '../usuario/usuario.entity';
 
 @Entity()
 export class Produtos {
@@ -27,6 +27,6 @@ export class Produtos {
   @Column()
   data_cadastro: Date;
 
-  @OneToMany(() => usuario_ref_produto, usuario_ref_produto => usuario_ref_produto.produto_)
-  id_: usuario_ref_produto;
+  @ManyToMany((type) => Usuario, (user) => user.produtos)
+  user: Usuario[];
 }

@@ -15,12 +15,7 @@ export class UsuarioService {
   }
 
   async adicionarUsuario(usuario: UsuarioDto) {
-    const novoUsuario = this.usuarioRepository.create(usuario)
 
-    try {
-      this.usuarioRepository.save(novoUsuario)
-    } catch (err) {
-      console.log(err)
-    }
+      this.usuarioRepository.save(usuario);
   }
 }

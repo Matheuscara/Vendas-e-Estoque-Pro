@@ -1,16 +1,12 @@
 import { Body, Controller, Get, Post } from "@nestjs/common"
 import { ApiBody, ApiTags } from "@nestjs/swagger"
 import { ProdutosService } from "src/database/produtos/usuario.service"
-import { UsuarioProdutoService } from "src/database/usuarioProduto/usuarioProduto.service";
 import { ProdutoDto } from "src/modules/Dto/produto.dto"
 
 @Controller('/produto')
 @ApiTags('produto')
 export class produtoController {
-  constructor(
-    private produtosService: ProdutosService,
-    private usuarioProdutoModule: UsuarioProdutoService,
-  ) {}
+  constructor(private produtosService: ProdutosService) {}
 
   @Get('/produtos')
   getProdutos(): any {
@@ -32,6 +28,11 @@ export class produtoController {
           valorCompra: 2,
           valorVenda: 3,
           data_cadastro: new Date(),
+          user: [
+            {
+              id: 1,
+            },
+          ],
         } as ProdutoDto,
       },
     },
@@ -39,10 +40,5 @@ export class produtoController {
   @Post('/cria')
   criaUsuario(@Body() produtoDto: ProdutoDto): any {
     return this.produtosService.adicionarProduto(produtoDto);
-  }
-
-  @Get('/usuario')
-  getUsuariosProdutos(): any {
-    return this.usuarioProdutoModule.findAll();
   }
 }
