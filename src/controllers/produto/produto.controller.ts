@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from "@nestjs/common"
+import { Body, Controller, Get, Post, UsePipes, ValidationPipe } from "@nestjs/common"
 import { ApiBody, ApiTags } from "@nestjs/swagger"
 import { ProdutosService } from "src/database/produtos/usuario.service"
 import { ProdutoDto } from "src/modules/Dto/produto.dto"
@@ -37,6 +37,7 @@ export class produtoController {
       },
     },
   })
+  @UsePipes(new ValidationPipe())
   @Post('/cria')
   criaUsuario(@Body() produtoDto: ProdutoDto): any {
     return this.produtosService.adicionarProduto(produtoDto);
