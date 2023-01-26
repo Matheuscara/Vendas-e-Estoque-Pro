@@ -32,8 +32,8 @@ export class produtoController {
           categoria: 'lata',
           quantidade: 2,
           qtdMinima: 3,
-          valorCompra: 2,
-          valorVenda: 3,
+          valorCompra: '2,30',
+          valorVenda: '4,30',
           data_cadastro: new Date(),
           user: [
             {

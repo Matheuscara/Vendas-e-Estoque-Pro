@@ -1,7 +1,16 @@
-import { Body, Controller, Get, NotFoundException, Param, Post, UsePipes, ValidationPipe } from "@nestjs/common"
-import { ApiBody, ApiTags } from "@nestjs/swagger"
-import { UsuarioService } from "src/database/usuario/usuario.service"
-import { UsuarioDto } from "src/modules/Dto/Usuario.dto"
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { UsuarioService } from 'src/database/usuario/usuario.service';
+import { UsuarioDto } from 'src/modules/Dto/Usuario.dto';
+import { loginUsuarioDto } from 'src/modules/Dto/loginUsuario.dto';
 
 @Controller('/usuario')
 @ApiTags('Usuario')
@@ -11,6 +20,30 @@ export class usuarioController {
   @Get('/consulta')
   getUsuarios(): any {
     return this.usuarioService.findAll();
+  }
+
+  @Get('/consulta/:id')
+  consultaUsuarioId(@Param('id') id: string) {
+    return this.usuarioService.buscaUsuarioId(id);
+  }
+
+  @ApiBody({
+    type: loginUsuarioDto,
+    description: '',
+    examples: {
+      Usuario: {
+        summary: 'Usuario',
+        description: 'Login Usuario',
+        value: {
+          email: 'teste@gmail.com',
+          senha: '12345',
+        } as loginUsuarioDto,
+      },
+    },
+  })
+  @Post('/login')
+  loginUsuario(@Body() loginUsuarioDto: loginUsuarioDto) {
+    return this.usuarioService.login(loginUsuarioDto);
   }
 
   @ApiBody({
@@ -34,10 +67,5 @@ export class usuarioController {
   @Post('/cria')
   criaUsuario(@Body() usuarioDto: UsuarioDto): any {
     return this.usuarioService.adicionarUsuario(usuarioDto);
-  }
-
-  @Get('/consulta/:id')
-  consultaUsuarioId(@Param('id') id: string) {
-    return this.usuarioService.buscaUsuarioId(id);
   }
 }

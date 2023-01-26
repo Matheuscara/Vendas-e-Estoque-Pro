@@ -16,10 +16,10 @@ export class ProdutoDto {
   qtdMinima: number;
 
   @IsNotEmpty()
-  valorCompra: number;
+  valorCompra: string;
 
   @IsNotEmpty()
-  valorVenda: number;
+  valorVenda: string;
 
   @IsNotEmpty()
   @IsISO8601()

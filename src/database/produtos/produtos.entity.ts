@@ -19,10 +19,10 @@ export class Produtos {
   qtdMinima: number;
 
   @Column()
-  valorCompra: number;
+  valorCompra: string;
 
   @Column()
-  valorVenda: number;
+  valorVenda: string;
 
   @Column()
   data_cadastro: Date;
