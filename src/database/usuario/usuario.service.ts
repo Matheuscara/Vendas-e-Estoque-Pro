@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { UsuarioDto } from 'src/modules/Dto/Usuario.dto';
 import { Repository } from 'typeorm';
 import { Usuario } from './usuario.entity';
@@ -14,8 +14,27 @@ export class UsuarioService {
     return this.usuarioRepository.find();
   }
 
-  async adicionarUsuario(usuario: UsuarioDto) {
+  async buscaUsuarioId(id: string): Promise<Usuario | undefined> {
+    if (id == null || isNaN(Number(id))) {
+      throw new NotFoundException('User not found');
+    }
 
-      this.usuarioRepository.save(usuario);
+    const userId = Number(id);
+
+    const user = await this.usuarioRepository.findOne({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return user;
+  }
+
+  async adicionarUsuario(usuario: UsuarioDto) {
+    this.usuarioRepository.save(usuario);
   }
 }

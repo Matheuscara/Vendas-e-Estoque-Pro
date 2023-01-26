@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UsePipes, ValidationPipe } from "@nestjs/common"
+import { Body, Controller, Get, NotFoundException, Param, Post, UsePipes, ValidationPipe } from "@nestjs/common"
 import { ApiBody, ApiTags } from "@nestjs/swagger"
 import { UsuarioService } from "src/database/usuario/usuario.service"
 import { UsuarioDto } from "src/modules/Dto/Usuario.dto"
@@ -36,6 +36,8 @@ export class usuarioController {
     return this.usuarioService.adicionarUsuario(usuarioDto);
   }
 
-  // @Get('/consulta/usuario/:id')
-  // consultaUsuarioId(usuarioDto: consulta.usuario.request.Dto):
+  @Get('/consulta/:id')
+  consultaUsuarioId(@Param('id') id: string) {
+    return this.usuarioService.buscaUsuarioId(id);
+  }
 }

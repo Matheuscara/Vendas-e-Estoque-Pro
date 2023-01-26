@@ -1,7 +1,14 @@
-import { Body, Controller, Get, Post, UsePipes, ValidationPipe } from "@nestjs/common"
-import { ApiBody, ApiTags } from "@nestjs/swagger"
-import { ProdutosService } from "src/database/produtos/usuario.service"
-import { ProdutoDto } from "src/modules/Dto/produto.dto"
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { ProdutosService } from 'src/database/produtos/produto.service';
+import { ProdutoDto } from 'src/modules/Dto/produto.dto';
 
 @Controller('/produto')
 @ApiTags('produto')
