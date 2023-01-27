@@ -7,6 +7,11 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   dotenv.config();
   const options = new DocumentBuilder()
+    .addSecurity('bearer', {
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+    })
     .setTitle('estoquePro')
     .setDescription(
       'Este projeto de gerenciamento de entradas e saídas de vendas é um sistema que permite controlar e gerenciar as transações comerciais de uma empresa, garantindo que as informações sobre vendas, estoque e fluxo de caixa sejam precisas e atualizadas em tempo real',

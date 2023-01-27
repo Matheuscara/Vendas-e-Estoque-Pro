@@ -6,25 +6,31 @@ import {
   Post,
   UsePipes,
   ValidationPipe,
+  Headers,
 } from '@nestjs/common';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { UsuarioService } from 'src/database/usuario/usuario.service';
 import { UsuarioDto } from 'src/modules/Dto/Usuario.dto';
 import { loginUsuarioDto } from 'src/modules/Dto/loginUsuario.dto';
+import { validaToken } from 'src/utils/tokenJWT';
 
+@ApiBearerAuth()
 @Controller('/usuario')
 @ApiTags('Usuario')
 export class usuarioController {
   constructor(private usuarioService: UsuarioService) {}
 
   @Get('/consulta')
-  getUsuarios(): any {
-    return this.usuarioService.findAll();
+  getUsuarios(@Headers() headers): any {
+    return validaToken(headers.authorization, this.usuarioService.findAll());
   }
 
   @Get('/consulta/:id')
-  consultaUsuarioId(@Param('id') id: string) {
-    return this.usuarioService.buscaUsuarioId(id);
+  consultaUsuarioId(@Param('id') id: string, @Headers() headers) {
+    return validaToken(
+      headers.authorization,
+      this.usuarioService.buscaUsuarioId(id),
+    );
   }
 
   @ApiBody({
@@ -42,8 +48,8 @@ export class usuarioController {
     },
   })
   @Post('/login')
-  loginUsuario(@Body() loginUsuarioDto: loginUsuarioDto) {
-    return this.usuarioService.login(loginUsuarioDto);
+  async loginUsuario(@Body() loginUsuarioDto: loginUsuarioDto) {
+    return await this.usuarioService.login(loginUsuarioDto);
   }
 
   @ApiBody({

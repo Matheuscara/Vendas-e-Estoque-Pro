@@ -5,12 +5,7 @@ import { UsuariosModule } from './controllers/usuario/usuario.module';
 import { produtosModule } from './controllers/produto/produto.module';
 
 @Module({
-  imports: [
-    SwaggerModule,
-    DocumentBuilder,
-    UsuariosModule,
-    produtosModule
-  ],
+  imports: [SwaggerModule, DocumentBuilder, UsuariosModule, produtosModule],
   providers: [AppService],
 })
 export class AppModule {}

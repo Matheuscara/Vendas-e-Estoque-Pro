@@ -3,6 +3,7 @@ import { UsuarioDto } from 'src/modules/Dto/Usuario.dto';
 import { loginUsuarioDto } from 'src/modules/Dto/loginUsuario.dto';
 import { Repository } from 'typeorm';
 import { Usuario } from './usuario.entity';
+import { criarToken } from 'src/utils/tokenJWT';
 const bcrypt = require('bcrypt');
 
 export class UsuarioService {
@@ -52,17 +53,20 @@ export class UsuarioService {
         email: loginUsuarioDto.email,
       },
     });
-    console.log(user);
+
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException('Email not found');
     }
 
-    bcrypt.compare(loginUsuarioDto.senha, user.senha, (err, result) => {
-      if (result) {
-        return 'Usuario Logado';
-      } else {
-        throw new NotFoundException('User not found');
-      }
-    });
+    const result = bcrypt.compare(loginUsuarioDto.senha, user.senha);
+
+    if (result) {
+      return criarToken({
+        email: user.email,
+        id: user.id,
+      });
+    } else {
+      throw new NotFoundException('Email not found');
+    }
   }
 }
