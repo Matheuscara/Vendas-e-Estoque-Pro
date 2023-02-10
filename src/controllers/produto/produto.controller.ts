@@ -2,9 +2,11 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
   UsePipes,
   ValidationPipe,
+  Headers,
 } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { ProdutosService } from 'src/database/produtos/produto.service';
@@ -15,7 +17,7 @@ import { ProdutoDto } from 'src/modules/Dto/produto.dto';
 export class produtoController {
   constructor(private produtosService: ProdutosService) {}
 
-  @Get('/produtos')
+  @Get('/')
   getProdutos(): any {
     return this.produtosService.findAll();
   }

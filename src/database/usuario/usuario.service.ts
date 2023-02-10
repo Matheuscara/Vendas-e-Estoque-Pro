@@ -33,7 +33,10 @@ export class UsuarioService {
       throw new NotFoundException('User not found');
     }
 
+    delete user.senha;
+
     return user;
+
   }
 
   async adicionarUsuario(usuario: UsuarioDto) {

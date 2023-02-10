@@ -11,7 +11,10 @@ export const criarToken = (payload: { email: string; id: number }) => {
     expiresIn: '1h', // token expira em 1 hora
   });
 
-  return token;
+  return {
+    token: token,
+    data_validate: '1hr'
+  };
 };
 
 export const validaToken = async (token: string, Function: Promise<any>) => {
