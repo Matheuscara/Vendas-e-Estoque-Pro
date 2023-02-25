@@ -6,6 +6,7 @@ import * as dotenv from 'dotenv';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   dotenv.config();
+
   const options = new DocumentBuilder()
     .addSecurity('bearer', {
       type: 'http',
@@ -22,7 +23,8 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
 
   SwaggerModule.setup('api', app, document);
+  app.enableCors();
 
-  await app.listen(3000);
+  await app.listen(5000);
 }
 bootstrap();
