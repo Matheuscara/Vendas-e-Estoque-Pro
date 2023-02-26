@@ -8,19 +8,15 @@ import {
   ValidationPipe,
   Headers,
 } from '@nestjs/common';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { ProdutosService } from 'src/database/produtos/produto.service';
 import { ProdutoDto } from 'src/modules/Dto/produto.dto';
+import { validaToken } from 'src/utils/tokenJWT';
 
 @Controller('/produto')
 @ApiTags('produto')
 export class produtoController {
   constructor(private produtosService: ProdutosService) {}
-
-  @Get('/')
-  getProdutos(): any {
-    return this.produtosService.findAll();
-  }
 
   @ApiBody({
     type: ProdutoDto,
@@ -37,18 +33,17 @@ export class produtoController {
           valorCompra: '2,30',
           valorVenda: '4,30',
           data_cadastro: new Date(),
-          user: [
-            {
-              id: 1,
-            },
-          ],
         } as ProdutoDto,
       },
     },
   })
+  @ApiBearerAuth()
   @UsePipes(new ValidationPipe())
   @Post('/cria')
-  criaUsuario(@Body() produtoDto: ProdutoDto): any {
-    return this.produtosService.adicionarProduto(produtoDto);
+  criaUsuario(@Body() produtoDto: ProdutoDto, @Headers() headers): any {
+    return validaToken(
+      headers.authorization,
+      this.produtosService.adicionarProduto(produtoDto, headers.authorization),
+    );
   }
 }

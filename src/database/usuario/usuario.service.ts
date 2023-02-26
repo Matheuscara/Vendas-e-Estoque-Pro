@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { Usuario } from './usuario.entity';
 import { criarToken } from 'src/utils/tokenJWT';
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 export class UsuarioService {
   constructor(
@@ -12,20 +13,12 @@ export class UsuarioService {
     private usuarioRepository: Repository<Usuario>,
   ) {}
 
-  async findAll(): Promise<Usuario[]> {
-    return this.usuarioRepository.find();
-  }
+  async buscaUsuarioId(token: string): Promise<Usuario | undefined> {
 
-  async buscaUsuarioId(id: string): Promise<Usuario | undefined> {
-    if (id == null || isNaN(Number(id))) {
-      throw new NotFoundException('User not found');
-    }
-
-    const userId = Number(id);
-
+    const tokenInfo = await jwt.verify(token.split(' ')[1], process.env.SECRET_TOKEN_JWT);
     const user = await this.usuarioRepository.findOne({
       where: {
-        id: userId,
+        id: tokenInfo.id,
       },
     });
 

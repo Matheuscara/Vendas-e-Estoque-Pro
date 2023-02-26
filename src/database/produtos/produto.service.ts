@@ -3,6 +3,7 @@ import { Console } from 'console';
 import { ProdutoDto } from 'src/modules/Dto/produto.dto';
 import { Repository } from 'typeorm';
 import { Produtos } from './produtos.entity';
+const jwt = require('jsonwebtoken');
 
 @Injectable()
 export class ProdutosService {
@@ -11,11 +12,19 @@ export class ProdutosService {
     private produtosRepository: Repository<Produtos>,
   ) {}
 
-  async findAll(): Promise<Produtos[]> {
-    return this.produtosRepository.find();
-  }
+  async adicionarProduto(produtoDto: ProdutoDto, token: string) {
 
-  async adicionarProduto(produtoDto: ProdutoDto) {
-    this.produtosRepository.save(produtoDto);
+    const tokenInfo = await jwt.verify(token.split(' ')[1], process.env.SECRET_TOKEN_JWT);
+
+    this.produtosRepository.save(
+      {
+        ...produtoDto,
+        user: [
+          {
+            id: tokenInfo.id
+          }
+        ]
+      }
+      );
   }
 }

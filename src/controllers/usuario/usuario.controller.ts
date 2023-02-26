@@ -14,22 +14,17 @@ import { UsuarioDto } from 'src/modules/Dto/Usuario.dto';
 import { loginUsuarioDto } from 'src/modules/Dto/loginUsuario.dto';
 import { validaToken } from 'src/utils/tokenJWT';
 
-@ApiBearerAuth()
 @Controller('/usuario')
 @ApiTags('Usuario')
 export class usuarioController {
   constructor(private usuarioService: UsuarioService) {}
 
-  @Get('/consulta')
-  getUsuarios(@Headers() headers): any {
-    return validaToken(headers.authorization, this.usuarioService.findAll());
-  }
-
-  @Get('/consulta/:id')
-  consultaUsuarioId(@Param('id') id: string, @Headers() headers) {
+  @ApiBearerAuth()
+  @Get('/consulta/produtos')
+  consultaUsuarioId(@Headers() headers) {
     return validaToken(
       headers.authorization,
-      this.usuarioService.buscaUsuarioId(id),
+      this.usuarioService.buscaUsuarioId(headers.authorization),
     );
   }
 
@@ -47,6 +42,7 @@ export class usuarioController {
       },
     },
   })
+  @UsePipes(new ValidationPipe())
   @Post('/login')
   async loginUsuario(@Body() loginUsuarioDto: loginUsuarioDto) {
     return await this.usuarioService.login(loginUsuarioDto);
