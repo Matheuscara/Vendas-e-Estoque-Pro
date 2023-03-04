@@ -5,7 +5,6 @@ import { Repository } from 'typeorm';
 import { Usuario } from './usuario.entity';
 import { criarToken } from 'src/utils/tokenJWT';
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 
 export class UsuarioService {
   constructor(
@@ -13,23 +12,20 @@ export class UsuarioService {
     private usuarioRepository: Repository<Usuario>,
   ) {}
 
-  async buscaUsuarioId(token: string): Promise<Usuario | undefined> {
-
-    const tokenInfo = await jwt.verify(token.split(' ')[1], process.env.SECRET_TOKEN_JWT);
+  async buscaUsuarioId(userInfo: any): Promise<Usuario | undefined> {
     const user = await this.usuarioRepository.findOne({
       where: {
-        id: tokenInfo.id,
+        id: userInfo.id,
       },
     });
 
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException('Email nao encontrado');
     }
 
     delete user.senha;
 
     return user;
-
   }
 
   async adicionarUsuario(usuario: UsuarioDto) {
@@ -51,18 +47,23 @@ export class UsuarioService {
     });
 
     if (!user) {
-      throw new NotFoundException('Email not found');
+      throw new NotFoundException('Email nao encontrado');
     }
 
-    const result = bcrypt.compare(loginUsuarioDto.senha, user.senha);
+    const senha = await this.compare(loginUsuarioDto.senha, user.senha);
 
-    if (result) {
+    if(senha) {
       return criarToken({
         email: user.email,
         id: user.id,
+        permissao: user.permissao
       });
-    } else {
-      throw new NotFoundException('Email not found');
+    }  else {
+      throw new NotFoundException('Login invalido');
     }
+  }
+
+  compare(passwordBody, encrypted) {
+    return bcrypt.compare(passwordBody, encrypted);
   }
 }

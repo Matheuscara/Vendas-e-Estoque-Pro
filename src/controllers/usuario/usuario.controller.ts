@@ -2,17 +2,17 @@ import {
   Body,
   Controller,
   Get,
-  Param,
   Post,
   UsePipes,
   ValidationPipe,
-  Headers,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { UsuarioService } from 'src/database/usuario/usuario.service';
 import { UsuarioDto } from 'src/modules/Dto/Usuario.dto';
 import { loginUsuarioDto } from 'src/modules/Dto/loginUsuario.dto';
-import { validaToken } from 'src/utils/tokenJWT';
+import { UserRoleGuard } from 'src/auth/user.role.guard';
 
 @Controller('/usuario')
 @ApiTags('Usuario')
@@ -21,11 +21,9 @@ export class usuarioController {
 
   @ApiBearerAuth()
   @Get('/consulta/produtos')
-  consultaUsuarioId(@Headers() headers) {
-    return validaToken(
-      headers.authorization,
-      this.usuarioService.buscaUsuarioId(headers.authorization),
-    );
+  @UseGuards(UserRoleGuard)
+  consultaUsuarioId(@Req() req) {
+    return this.usuarioService.buscaUsuarioId(req.user);
   }
 
   @ApiBody({
@@ -55,7 +53,7 @@ export class usuarioController {
       Usuario: {
         summary: 'Usuario',
         description: 'Adiciona um usuario no banco de dados',
-        value: {
+        value: { 
           nome: 'Nome de teste',
           email: 'email@email.com',
           permissao: 'Usuario',

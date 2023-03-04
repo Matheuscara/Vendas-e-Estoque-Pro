@@ -1,17 +1,16 @@
 import {
   Body,
   Controller,
-  Get,
-  Param,
   Post,
   UsePipes,
   ValidationPipe,
-  Headers,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
+import { UserRoleGuard } from 'src/auth/user.role.guard';
 import { ProdutosService } from 'src/database/produtos/produto.service';
 import { ProdutoDto } from 'src/modules/Dto/produto.dto';
-import { validaToken } from 'src/utils/tokenJWT';
 
 @Controller('/produto')
 @ApiTags('produto')
@@ -40,10 +39,11 @@ export class produtoController {
   @ApiBearerAuth()
   @UsePipes(new ValidationPipe())
   @Post('/cria')
-  criaUsuario(@Body() produtoDto: ProdutoDto, @Headers() headers): any {
-    return validaToken(
-      headers.authorization,
-      this.produtosService.adicionarProduto(produtoDto, headers.authorization),
+  @UseGuards(UserRoleGuard)
+  criaUsuario(@Body() produtoDto: ProdutoDto, @Req() req): any {
+    return this.produtosService.adicionarProduto(
+      produtoDto,
+      req.user,
     );
   }
 }
