@@ -1,5 +1,6 @@
-import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Produtos } from '../produtos/produtos.entity';
+import { Venda } from '../vendas/venda.entity';
 
 @Entity()
 export class Usuario {
@@ -24,4 +25,7 @@ export class Usuario {
   @ManyToMany((type) => Produtos, (produto) => produto.user, { eager: true })
   @JoinTable()
   produtos: Produtos[];
+
+  @OneToMany(() => Venda, sale => sale.usuario)
+  sales: Venda[];
 }

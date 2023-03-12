@@ -20,6 +20,13 @@ export class usuarioController {
   constructor(private usuarioService: UsuarioService) {}
 
   @ApiBearerAuth()
+  @Get('/consulta/token')
+  @UseGuards(UserRoleGuard)
+  validaToken() {
+    return this.usuarioService.validaToken();
+  }
+
+  @ApiBearerAuth()
   @Get('/consulta/produtos')
   @UseGuards(UserRoleGuard)
   consultaUsuarioId(@Req() req) {
@@ -34,8 +41,8 @@ export class usuarioController {
         summary: 'Usuario',
         description: 'Login Usuario',
         value: {
-          email: 'teste@gmail.com',
-          senha: '12345',
+          email: 'email@email.com',
+          senha: 'teste',
         } as loginUsuarioDto,
       },
     },

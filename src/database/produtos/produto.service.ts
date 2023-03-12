@@ -11,7 +11,7 @@ export class ProdutosService {
   ) {}
 
   async adicionarProduto(produtoDto: ProdutoDto, userInfo: any) {
-    this.produtosRepository.save(
+    await this.produtosRepository.save(
       {
         ...produtoDto,
         user: [

@@ -1,5 +1,6 @@
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Usuario } from '../usuario/usuario.entity';
+import { Venda } from '../vendas/venda.entity';
 
 @Entity()
 export class Produtos {
@@ -29,4 +30,7 @@ export class Produtos {
 
   @ManyToMany((type) => Usuario, (user) => user.produtos)
   user: Usuario[];
+
+  @OneToMany(() => Venda, sale => sale.produto)
+  sales: Venda[];
 }

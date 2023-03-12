@@ -7,9 +7,16 @@ import {
 
 const jwt = require('jsonwebtoken');
 
+interface user {
+    email: string,
+    id: number,
+    permissao: string,
+    iat: number,
+    exp: number,
+}
+
 @Injectable()
 export class UserRoleGuard implements CanActivate {
-
   async canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest();
     const token = request.headers.authorization;
@@ -19,7 +26,7 @@ export class UserRoleGuard implements CanActivate {
         throw new UnauthorizedException('Invalid token');
       }
 
-      const tokenResult = await jwt.verify(
+      const tokenResult:user = await jwt.verify(
         token.split(' ')[1],
         process.env.SECRET_TOKEN_JWT,
       );

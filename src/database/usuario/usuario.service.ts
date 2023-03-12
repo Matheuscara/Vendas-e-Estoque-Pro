@@ -63,6 +63,10 @@ export class UsuarioService {
     }
   }
 
+  validaToken() {
+    return true
+  }
+
   compare(passwordBody, encrypted) {
     return bcrypt.compare(passwordBody, encrypted);
   }
