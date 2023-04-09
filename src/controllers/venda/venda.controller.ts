@@ -25,7 +25,7 @@ export class vendaController {
   @Get('/consulta')
   @UseGuards(UserRoleGuard)
   consultaVendas(@Req() req) {
-    return this.vendaService.produtosUsuario(req.user.id);
+    return this.vendaService.getVenda(req.user.id);
   }
 
   @ApiBody({
@@ -37,10 +37,9 @@ export class vendaController {
         description: 'Adiciona uma venda seu usuario',
         value: {
           data: new Date(),
-          quantidade: 10,
           precoTotal: 12,
           formaPagamento: 'AVista',
-          produto: 2,
+          produtos: [{ produtoID: 2, quantidade: 1 }],
           status: 'Pendente'
         } as VendaDto,
       },

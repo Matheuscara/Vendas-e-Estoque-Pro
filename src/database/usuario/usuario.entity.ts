@@ -1,6 +1,7 @@
 import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Produtos } from '../produtos/produtos.entity';
 import { Venda } from '../vendas/venda.entity';
+import { Pedido } from '../pedido/pedido.entity';
 
 @Entity()
 export class Usuario {
@@ -28,4 +29,7 @@ export class Usuario {
 
   @OneToMany(() => Venda, sale => sale.usuario)
   sales: Venda[];
+
+  @OneToMany(() => Pedido, (pedido) => pedido.usuario)
+  usuarioPedido
 }

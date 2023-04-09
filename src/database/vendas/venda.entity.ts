@@ -1,6 +1,6 @@
-import { Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Produtos } from '../produtos/produtos.entity';
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Usuario } from '../usuario/usuario.entity';
+import { Pedido } from '../pedido/pedido.entity';
 
 @Entity()
 export class Venda {
@@ -10,15 +10,13 @@ export class Venda {
   @Column()
   data: Date;
 
-  @ManyToOne(() => Usuario, user => user.sales)
+  @ManyToOne(() => Usuario, user => user.sales, { eager: true })
   usuario: Usuario;
 
-  @ManyToOne(() => Produtos, product => product.sales)
-  produto: Produtos;
-
-  @Column()
-  quantidade: number;
-
+  @ManyToMany(() => Pedido, (pedido) => pedido.venda, { cascade: true })
+  @JoinTable()
+  pedidos: Pedido[]
+  
   @Column()
   precoTotal: number;
 

@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Usuario } from '../usuario/usuario.entity';
-import { Venda } from '../vendas/venda.entity';
+import { Pedido } from '../pedido/pedido.entity';
 
 @Entity()
 export class Produtos {
@@ -31,6 +31,6 @@ export class Produtos {
   @ManyToMany((type) => Usuario, (user) => user.produtos)
   user: Usuario[];
 
-  @OneToMany(() => Venda, sale => sale.produto)
-  sales: Venda[];
+  @OneToMany(() => Pedido, pedido => pedido.produto)
+  pedido: Pedido[];
 }

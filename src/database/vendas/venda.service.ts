@@ -4,6 +4,7 @@ import { Venda } from './venda.entity';
 import { Produtos } from '../produtos/produtos.entity';
 import { Usuario } from '../usuario/usuario.entity';
 import { VendaDto } from 'src/modules/Dto/venda.dto';
+import { Pedido } from '../pedido/pedido.entity';
 
 export class VendaService {
   constructor(
@@ -13,44 +14,85 @@ export class VendaService {
     private produtosRepository: Repository<Produtos>,
     @Inject('USUARIO_REPOSITORY')
     private usuarioRepository: Repository<Usuario>,
+    @Inject('PEDIDO_REPOSITORY')
+    private pedidoRepoditory: Repository<Pedido>,
   ) {}
 
-  async produtosUsuario(userID: number) {
-    const query = await this.vendaRepoditory
-    .createQueryBuilder('venda')
-    .leftJoinAndSelect('venda.usuario', 'usuario')
-    .leftJoinAndSelect('venda.produto', 'produto')
-    .where('usuario.id = :userId', { userId: userID });
+  async getVenda(userID: number) {
+    const user = await this.usuarioRepository.findOne({
+      where: { id: userID },
+    });
 
-   const vendas = await query.getMany();
+    if (!user) {
+      throw new NotFoundException('Usuario nao encontrado');
+    };
 
-   if(vendas.length === 0) {
-    throw new NotFoundException('Vendas nao encontradas');
-   } else {
-    return vendas
-   }
+    const vendas = await this.vendaRepoditory.find({
+      where: { usuario: user },
+    });
+
+    if (!vendas) {
+      throw new NotFoundException('Nenhuma venda encontrada');
+    };
+
+    return vendas.map((venda: Venda) => {
+      return {
+        ...venda,
+        usuario: {
+          id: venda.usuario.id,
+          nome: venda.usuario.nome,
+          email: venda.usuario.email,
+        }
+      }
+    })
   }
 
- async adicionarVenda(userID: number, venda: VendaDto) {
-  const user = await this.usuarioRepository.findOne({ where: { id: userID }});
-  const product = await this.produtosRepository.findOne({ where: { id: venda.produto }});
+  async adicionarVenda(userID: number, venda: VendaDto) {
+    let pedidos = [];
 
-  if(!product) {
-    throw new NotFoundException('Produto nao encontrado');
-  } else if (!user) {
-    throw new NotFoundException('Usuario nao encontrado');
+    const user = await this.usuarioRepository.findOne({
+      where: { id: userID },
+    });
+
+    if (!user) {
+      throw new NotFoundException('Usuario nao encontrado');
+    }
+
+    for (let index = 0; index < venda.produtos.length; index++) {
+      let produto = await this.produtosRepository.findOne({
+        where: { id: venda.produtos[index].produtoID },
+      });
+      if (produto) {
+        pedidos.push({
+          produto: produto,
+          quantidade: venda.produtos[index].quantidade,
+        });
+      } else {
+        throw new NotFoundException('Produto nao encontrado');
+      }
+    }
+
+    if (!user) {
+      throw new NotFoundException('Usuario nao encontrado');
+    } else if (pedidos.length === 0) {
+      throw new NotFoundException('Produto nao encontrado');
+    }
+
+    const sale = new Venda();
+    sale.data = venda.data;
+    sale.usuario = user;
+    sale.formaPagamento = venda.formaPagamento;
+    sale.status = venda.status;
+    sale.precoTotal = venda.precoTotal;
+    sale.pedidos = pedidos.map((pedido: Pedido) => {
+      return {
+        produto: pedido.produto,
+        quantidade: pedido.quantidade,
+        venda: sale,
+        usuario: user,
+      };
+    }) as Pedido[];
+
+    await this.vendaRepoditory.save(sale);
   }
-
-  const sale = new Venda();  
-  sale.data = venda.data;
-  sale.usuario = user;
-  sale.produto = product;
-  sale.quantidade = venda.quantidade
-  sale.formaPagamento = venda.formaPagamento
-  sale.status = venda.status
-  sale.precoTotal = venda.precoTotal;
-
-
-  await this.vendaRepoditory.save(sale);
- }
 }

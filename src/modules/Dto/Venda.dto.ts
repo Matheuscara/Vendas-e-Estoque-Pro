@@ -6,15 +6,12 @@ export class VendaDto {
     @IsNotEmpty()
     @IsISO8601()
     data: Date;
-
-    @IsNotEmpty()
-    quantidade: number;
   
     @IsNotEmpty()
     precoTotal: number;
 
     @IsNotEmpty()
-    produto: number;
+    produtos: { produtoID: number, quantidade: number }[];
   
     @IsNotEmpty()
     @IsIn(['AVista', 'APrazo'])
