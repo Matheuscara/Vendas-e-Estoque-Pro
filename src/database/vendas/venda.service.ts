@@ -25,7 +25,7 @@ export class VendaService {
 
     if (!user) {
       throw new NotFoundException('Usuario nao encontrado');
-    };
+    }
 
     const vendas = await this.vendaRepoditory.find({
       where: { usuario: user },
@@ -33,7 +33,7 @@ export class VendaService {
 
     if (!vendas) {
       throw new NotFoundException('Nenhuma venda encontrada');
-    };
+    }
 
     return vendas.map((venda: Venda) => {
       return {
@@ -42,13 +42,49 @@ export class VendaService {
           id: venda.usuario.id,
           nome: venda.usuario.nome,
           email: venda.usuario.email,
-        }
-      }
-    })
+        },
+      };
+    });
+  }
+
+  async getPedidos(userID: number, id: number) {
+    const user = await this.usuarioRepository.findOne({
+      where: { id: userID },
+    });
+
+    if (!user) {
+      throw new NotFoundException('Usuario nao encontrado');
+    }
+
+    const venda = await this.vendaRepoditory.findOne({
+      where: { usuario: user, id: id },
+    });
+
+    if (!venda) {
+      throw new NotFoundException('Nenhuma venda encontrada');
+    }
+
+    const pedidos = await this.pedidoRepoditory.find({
+      where: { usuario: user, venda: venda },
+    });
+
+    if (!pedidos || pedidos.length === 0) {
+      throw new NotFoundException('Nenhum pedido encontrado');
+    }
+
+    return pedidos.map((pedido: Pedido) => {
+      return {
+        quantidade: pedido.quantidade,
+        produto: {
+          ...pedido.produto,
+        },
+      };
+    });
   }
 
   async adicionarVenda(userID: number, venda: VendaDto) {
     let pedidos = [];
+    let produtosSemQuantidade = [];
 
     const user = await this.usuarioRepository.findOne({
       where: { id: userID },
@@ -62,7 +98,20 @@ export class VendaService {
       let produto = await this.produtosRepository.findOne({
         where: { id: venda.produtos[index].produtoID },
       });
-      if (produto) {
+      if (produto && produto.quantidade === 0) {
+        produtosSemQuantidade.push({ nome: produto.nome, id: produto.id });
+      } else if (produto && produto.quantidade < venda.produtos[index].quantidade) {
+        produtosSemQuantidade.push({ nome: produto.nome, id: produto.id });
+      } else if (produto) {
+        let produtoSubtraido: Produtos = {
+          ...produto,
+          quantidade: produto.quantidade - venda.produtos[index].quantidade,
+        };
+
+        await this.produtosRepository.save({
+          ...produto,
+          ...produtoSubtraido,
+        });
         pedidos.push({
           produto: produto,
           quantidade: venda.produtos[index].quantidade,
@@ -72,10 +121,12 @@ export class VendaService {
       }
     }
 
-    if (!user) {
-      throw new NotFoundException('Usuario nao encontrado');
-    } else if (pedidos.length === 0) {
-      throw new NotFoundException('Produto nao encontrado');
+    if (produtosSemQuantidade.length !== 0) {
+      throw new NotFoundException(
+        `Produtos em falta - id: ${produtosSemQuantidade.map(
+          (ob) => ob.id,
+        )}`,
+      );
     }
 
     const sale = new Venda();
