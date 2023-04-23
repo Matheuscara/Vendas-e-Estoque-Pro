@@ -8,7 +8,15 @@ import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [DatabaseModule, SwaggerModule, DocumentBuilder, UsuariosModule, produtosModule, VendasModule, ConfigModule.forRoot()],
+  imports: [
+    DatabaseModule,
+    SwaggerModule,
+    DocumentBuilder,
+    UsuariosModule,
+    produtosModule,
+    VendasModule,
+    ConfigModule.forRoot(),
+  ],
   providers: [AppService],
 })
 export class AppModule {}

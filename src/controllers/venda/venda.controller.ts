@@ -13,9 +13,10 @@ import { ApiBearerAuth, ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
 import { UsuarioService } from 'src/database/usuario/usuario.service';
 import { UsuarioDto } from 'src/modules/Dto/Usuario.dto';
 import { loginUsuarioDto } from 'src/modules/Dto/loginUsuario.dto';
-import { UserRoleGuard } from 'src/auth/user.role.guard';
-import { VendaService } from 'src/database/vendas/venda.service';
-import { VendaDto } from 'src/modules/Dto/venda.dto';
+import { UserRoleGuard } from '../../auth/user.role.guard';
+import { VendaService } from '../../database/vendas/venda.service';
+import { VendaDto } from '../../modules/Dto/Venda.dto';
+
 import path from 'path';
 
 @Controller('/venda')
