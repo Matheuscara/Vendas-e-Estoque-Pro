@@ -3,7 +3,6 @@ import { Repository } from 'typeorm';
 import { Venda } from './venda.entity';
 import { Produtos } from '../produtos/produtos.entity';
 import { Usuario } from '../usuario/usuario.entity';
-import { VendaDto } from 'src/modules/Dto/venda.dto';
 import { Pedido } from '../pedido/pedido.entity';
 
 export class VendaService {
@@ -82,7 +81,7 @@ export class VendaService {
     });
   }
 
-  async adicionarVenda(userID: number, venda: VendaDto) {
+  async adicionarVenda(userID: number, venda) {
     let pedidos = [];
     let produtosSemQuantidade = [];
 
