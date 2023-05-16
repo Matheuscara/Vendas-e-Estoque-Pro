@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsISO8601, IsIn } from 'class-validator';
+import { IsNotEmpty, IsISO8601, IsIn, Min, Max } from 'class-validator';
 
 export class VendaDto {
     id: number;
@@ -8,6 +8,8 @@ export class VendaDto {
     data: Date;
   
     @IsNotEmpty()
+    @Min(0)
+    @Max(99999999)
     precoTotal: number;
 
     @IsNotEmpty()

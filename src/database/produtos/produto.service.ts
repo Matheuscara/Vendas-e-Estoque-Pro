@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { ProdutoDto } from 'src/modules/Dto/produto.dto';
 import { Repository } from 'typeorm';
 import { Produtos } from './produtos.entity';
@@ -11,6 +11,17 @@ export class ProdutosService {
   ) {}
 
   async adicionarProduto(produtoDto: ProdutoDto, userInfo: any) {
+
+    const produtoExistente = await this.produtosRepository.findOne({
+      where: {
+        nome: produtoDto.nome,
+      },
+    });
+
+    if(produtoExistente) {
+      throw new HttpException('Produto duplicado', HttpStatus.CONFLICT);
+    }
+
     await this.produtosRepository.save(
       {
         ...produtoDto,
