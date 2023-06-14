@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsISO8601, Min, IsString, MaxLength, MinLength, Max, IsPositive } from 'class-validator';
+import { IsNotEmpty, IsISO8601, Min, IsString, MaxLength, MinLength, Max, IsPositive, IsNumber } from 'class-validator';
 
 export class ProdutoDto {
   id: number;
@@ -16,6 +16,7 @@ export class ProdutoDto {
   categoria: string;
 
   @IsNotEmpty()
+  @IsNumber()
   @Min(0)
   @Max(99999999)
   quantidade: number;
@@ -27,13 +28,11 @@ export class ProdutoDto {
 
   @IsNotEmpty()
   @IsString()
-  @MinLength(4)
   @MaxLength(12)
   valorCompra: string;
 
   @IsNotEmpty()
   @IsString()
-  @MinLength(4)
   @MaxLength(12)
   valorVenda: string;
 

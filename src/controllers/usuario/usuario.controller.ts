@@ -22,15 +22,15 @@ export class usuarioController {
   @ApiBearerAuth()
   @Get('/consulta/token')
   @UseGuards(UserRoleGuard)
-  validaToken() {
-    return this.usuarioService.validaToken();
+  validaToken(@Req() req) {
+    return this.usuarioService.validaToken(req.user);
   }
 
   @ApiBearerAuth()
   @Get('/consulta/produtos')
   @UseGuards(UserRoleGuard)
   consultaUsuarioId(@Req() req) {
-    return this.usuarioService.buscaUsuarioId(req.user);
+    return this.usuarioService.buscaProdutosId(req.user);
   }
 
   @ApiBody({
@@ -63,7 +63,7 @@ export class usuarioController {
         value: { 
           nome: 'Nome de teste',
           email: 'email@email.com',
-          permissao: 'Usuario',
+          permissao: 'usuario',
           senha: 'teste',
           data_cadastro: new Date(),
         } as UsuarioDto,

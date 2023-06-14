@@ -15,7 +15,9 @@ import { ConfigModule } from '@nestjs/config';
     UsuariosModule,
     produtosModule,
     VendasModule,
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
   ],
   providers: [AppService],
 })

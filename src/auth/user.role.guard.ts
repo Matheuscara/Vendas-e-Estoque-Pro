@@ -1,9 +1,12 @@
 import {
   CanActivate,
   ExecutionContext,
+  Inject,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+import { Usuario } from 'src/database/usuario/usuario.entity';
+import { Repository } from 'typeorm';
 
 const jwt = require('jsonwebtoken');
 
@@ -17,6 +20,7 @@ interface user {
 
 @Injectable()
 export class UserRoleGuard implements CanActivate {
+
   async canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest();
     const token = request.headers.authorization;
