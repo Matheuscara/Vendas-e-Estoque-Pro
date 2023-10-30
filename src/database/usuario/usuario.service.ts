@@ -13,7 +13,7 @@ import { Produtos } from '../produtos/produtos.entity';
 const bcrypt = require('bcrypt');
 
 export class UsuarioService {
-  constructor(
+    constructor(
     @Inject('USUARIO_REPOSITORY')
     private usuarioRepository: Repository<Usuario>,
   ) {}
@@ -26,7 +26,7 @@ export class UsuarioService {
     });
 
     if (!user) {
-      throw new NotFoundException('Email nao encontrado');
+            throw new NotFoundException('Email nao encontrado');
     }
 
     delete user.senha;

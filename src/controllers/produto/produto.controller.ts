@@ -6,6 +6,7 @@ import {
   ValidationPipe,
   UseGuards,
   Req,
+  Get,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { UserRoleGuard } from 'src/auth/user.role.guard';
@@ -43,6 +44,16 @@ export class produtoController {
   criaUsuario(@Body() produtoDto: ProdutoDto, @Req() req): any {
     return this.produtosService.adicionarProduto(
       produtoDto,
+      req.user,
+    );
+  }
+
+  @ApiBearerAuth()
+  @UsePipes(new ValidationPipe())
+  @Get('/consulta')
+  @UseGuards(UserRoleGuard)
+  consultaProsutosUsuario(@Req() req): any {
+    return this.produtosService.consultaProsutosUsuario(
       req.user,
     );
   }

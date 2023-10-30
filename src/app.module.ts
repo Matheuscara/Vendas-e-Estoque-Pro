@@ -6,6 +6,9 @@ import { produtosModule } from './controllers/produto/produto.module';
 import { VendasModule } from './controllers/venda/venda.module';
 import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
+import { Logger } from './log/logger';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { ResponseInterceptor } from './utils/responseInterceptor';
 
 @Module({
   imports: [
@@ -19,6 +22,14 @@ import { ConfigModule } from '@nestjs/config';
       isGlobal: true,
     }),
   ],
-  providers: [AppService],
+  providers: [
+    AppService,
+    Logger,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ResponseInterceptor,
+    },
+  ],
+  exports: [Logger],
 })
 export class AppModule {}

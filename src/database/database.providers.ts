@@ -13,7 +13,8 @@ export const databaseProviders = [
         entities: [__dirname + '/../**/*.entity{.ts,.js}'],
         // ssl: {
         //   rejectUnauthorized: true
-        // }
+        // } // COMANDO PARA RODAR EM SSL NUVEM
+        synchronize: true // COMANDO PARA ATUALIZAR TABELAS AUTOMATICAMENTE
       });
 
       return dataSource.initialize();

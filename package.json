@@ -22,6 +22,8 @@
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js"
   },
   "dependencies": {
+    "@logtail/node": "^0.4.12",
+    "@logtail/winston": "^0.4.12",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.3.1",
     "@nestjs/core": "^9.0.0",
@@ -33,11 +35,15 @@
     "class-validator": "^0.13.2",
     "dotenv": "^16.0.3",
     "jsonwebtoken": "^9.0.0",
+    "morgan": "^1.10.0",
     "mysql2": "^2.3.3",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
     "swagger-ui-express": "^4.6.0",
-    "typeorm": "^0.3.11"
+    "typeorm": "^0.3.11",
+    "uuidv4": "^6.2.13",
+    "winston": "^3.11.0",
+    "winston-daily-rotate-file": "^4.7.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",

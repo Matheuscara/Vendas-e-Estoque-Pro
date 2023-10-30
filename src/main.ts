@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import * as dotenv from 'dotenv';
+var morgan = require('morgan');
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -24,6 +25,12 @@ async function bootstrap() {
 
   SwaggerModule.setup('api', app, document);
   app.enableCors();
+
+  app.use(
+    morgan(
+      'url-base::url - statuscode::status - response-time::response-time ms'
+    ),
+  );
 
   await app.listen(process.env.PORT || 3000);
 }

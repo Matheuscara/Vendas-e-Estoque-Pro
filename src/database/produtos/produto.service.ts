@@ -33,4 +33,16 @@ export class ProdutosService {
       }
       );
   }
+
+  async consultaProsutosUsuario(userInfo: any) {
+    const produtos = await this.produtosRepository.findBy({
+      user: userInfo.id
+    });
+
+    if(!produtos) {
+      throw new HttpException('Produtos nao encontrados', HttpStatus.NOT_FOUND);
+    }
+
+    return produtos
+  }
 }
