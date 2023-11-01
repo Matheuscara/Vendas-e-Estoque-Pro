@@ -31,9 +31,8 @@ export class ResponseInterceptor implements NestInterceptor {
       params: params,
       query: query,
       service: ResponseInterceptor.name,
-      contextId: this.context,
       user: user,
-    });
+    }, {traceId: req.traceId});
 
     return next.handle().pipe(
       tap((data) =>
@@ -42,9 +41,8 @@ export class ResponseInterceptor implements NestInterceptor {
           body: data,
           headers: req.headers,
           service: ResponseInterceptor.name,
-          contextId: this.context,
           user: user,
-        }),
+        }, {traceId: req.traceId}),
       ),
     );
   }

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppService } from './app.service';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { UsuariosModule } from './controllers/usuario/usuario.module';
@@ -9,6 +9,7 @@ import { ConfigModule } from '@nestjs/config';
 import { Logger } from './log/logger';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ResponseInterceptor } from './utils/responseInterceptor';
+import { CorrelationIdMiddlewareLog } from './Middleware/correlationMiddlewareLog';
 
 @Module({
   imports: [
@@ -32,4 +33,10 @@ import { ResponseInterceptor } from './utils/responseInterceptor';
   ],
   exports: [Logger],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(CorrelationIdMiddlewareLog)
+      .forRoutes('*');
+  }
+}

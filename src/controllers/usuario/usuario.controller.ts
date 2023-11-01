@@ -72,7 +72,7 @@ export class usuarioController {
   })
   @UsePipes(new ValidationPipe())
   @Post('/cria')
-  criaUsuario(@Body() usuarioDto: UsuarioDto): any {
-    return this.usuarioService.adicionarUsuario(usuarioDto);
+  criaUsuario(@Body() usuarioDto: UsuarioDto, @Req() {traceId}): any {
+    return this.usuarioService.adicionarUsuario(usuarioDto, traceId);
   }
 }

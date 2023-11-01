@@ -10,13 +10,19 @@ import { Repository } from 'typeorm';
 import { Usuario } from './usuario.entity';
 import { criarToken } from 'src/utils/tokenJWT';
 import { Produtos } from '../produtos/produtos.entity';
+import { trace } from 'console';
 const bcrypt = require('bcrypt');
 
 export class UsuarioService {
+  logger: any;
+
     constructor(
     @Inject('USUARIO_REPOSITORY')
     private usuarioRepository: Repository<Usuario>,
-  ) {}
+  ) {
+    const winston = require('winston');
+    this.logger = winston.loggers.get('logger');
+  }
 
   async buscaUsuarioId(userInfo: any): Promise<Usuario | undefined> {
     const user = await this.usuarioRepository.findOne({
@@ -50,7 +56,7 @@ export class UsuarioService {
     return user.produtos;
   }
 
-  async adicionarUsuario(usuario: UsuarioDto) {
+  async adicionarUsuario(usuario: UsuarioDto, traceId: string) {
     const usuarioExistente = await this.usuarioRepository.findOne({
       where: {
         email: usuario.email,
@@ -58,7 +64,8 @@ export class UsuarioService {
     });
 
     if (usuarioExistente) {
-      throw new HttpException('Email duplicado', HttpStatus.CONFLICT);
+      this.logger.info('Email duplicado', {traceId})
+      throw new HttpException(`Email duplicado - traceID: ${traceId}`, HttpStatus.CONFLICT);
     }
 
     bcrypt.hash(

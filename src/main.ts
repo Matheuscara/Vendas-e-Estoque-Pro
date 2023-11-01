@@ -25,7 +25,6 @@ async function bootstrap() {
 
   SwaggerModule.setup('api', app, document);
   app.enableCors();
-
   app.use(
     morgan(
       'url-base::url - statuscode::status - response-time::response-time ms'
